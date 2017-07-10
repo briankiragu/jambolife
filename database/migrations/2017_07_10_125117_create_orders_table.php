@@ -15,6 +15,15 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('order_uuid',50);
+            $table->string('user_uuid',50);
+            $table->string('transaction_uuid',50);
+            
+            $table->text('order_details');
+            $table->decimal('order_total',12,2)->default(0.00);
+            $table->boolean('is_valid')->default(false);
+            $table->boolean('is_payable')->default(true);
+            
             $table->timestamps();
         });
     }

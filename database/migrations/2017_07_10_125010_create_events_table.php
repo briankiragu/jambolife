@@ -28,9 +28,9 @@ class CreateEventsTable extends Migration
             $table->string('small_image')->nullable();
             $table->text('description');
             $table->string('video_url')->nullable();
-            $table->timestamp('sales_close');
-            $table->timestamp('event_start');
-            $table->timestamp('event_end');
+            $table->timestamp('sales_close')->nullable();
+            $table->timestamp('event_start')->nullable();
+            $table->timestamp('event_end')->nullable();
             $table->boolean('is_active')->default(false);
             
             $table->timestamps();
