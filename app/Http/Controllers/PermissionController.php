@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Validator;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
-class RoleController extends Controller
+class PermissionController extends Controller
 {
     /**
     * Default clss constructor
     */
-    public function __construct(Role $role, Request $request)
+    public function __construct(Permission $permission, Request $request)
     {
         // Instantiate the user.
-        $this->model = $role;
+        $this->model = $permission;
 
         // Instantiate the validator.
         $this->validator = Validator::make($request->all(), [
@@ -22,6 +21,6 @@ class RoleController extends Controller
         ]);
 
         // Model blade slug.
-        $this->slug = 'role';
+        $this->slug = 'permission';
     }
 }

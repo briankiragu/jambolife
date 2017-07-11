@@ -34,11 +34,14 @@ class Controller extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        return response([
-            'payload' => $this->model->all(),
-            'status' => 200
+        return view($this->slug .'.index', [
+            'payload' => [
+                $this->slug => $this->model->all(),
+                'message' => ''
+            ],
+            'status' => http_response_code()
         ]);
     }
 
@@ -49,7 +52,7 @@ class Controller extends BaseController
      */
     public function create()
     {
-        return view($this->slug .'create');
+        return view($this->slug .'.create');
     }
 
     /**
@@ -63,26 +66,27 @@ class Controller extends BaseController
         try {
             // Validate the user input
             if ($this->validator->fails()) {
-                return response([
-                    'payload' => $this->validator->errors()->getMessages(),
-                    'status' => 422
-                 ]);
+                return redirect()->route($this->slug .'.create')
+                                ->withErrors($this->validator)
+                                ->withInput();
             }
 
-            // Create the instance
-            $action = $this->model->create($request->all());
+            // Create the instance and assign it to a variable.
+            $resource = $this->model->create($request->all());
 
-            // Return a success response
-            return response([
-                'payload' => 'Successfully created the '. $this->slug,
-                'status' => 201
+            // Return a success redirect response.
+            return redirect()->route($this->slug .'.show', ['id' => $resource->id])->with([
+                'payload' => [
+                    $this->slug => $resource,
+                    'message' => 'Successfully created the '. $this->slug
+                ],
+                'status' => http_response_code()
             ]);
 
         } catch (Exception $e) {
-            return response([
-                'payload' => $e->getMessage(),
-                'status' => 401
-            ]);
+            return redirect()->route($this->slug .'.create')
+                            ->withErrors($e->getMessage())
+                            ->withInput();
         }
     }
 
@@ -94,9 +98,12 @@ class Controller extends BaseController
      */
     public function show($id)
     {
-        return response([
-            'payload' => $this->model->find($id),
-            'status' => 200
+        return view($this->slug .'.show', [
+            'payload' => [
+                $this->slug => $this->model->find($id),
+                'message' => ''
+            ],
+            'status' => http_response_code()
         ]);
     }
 
@@ -108,9 +115,9 @@ class Controller extends BaseController
      */
     public function edit($id)
     {
-        return view($this->slug .'edit', [
+        return view($this->slug .'.edit', [
             'payload' => $this->model->find($id),
-            'status' => 200
+            'status' => http_response_code()
         ]);
     }
 
@@ -124,31 +131,37 @@ class Controller extends BaseController
     public function update(Request $request, $id)
     {
         try {
-            // Validate the user input
             if ($this->validator->fails()) {
-                return response([
-                    'payload' => $this->validator->errors()->getMessages(),
-                    'status' => 422
-                 ]);
+                return redirect()->route($this->slug .'.edit', ['id' => $id])->with([
+                    'payload' => $this->model->find($id),
+                    'status' => http_response_code()
+                ])
+                ->withErrors($this->validator)
+                ->withInput();
             }
 
-            // Create the instance
+            // Update the instance.
             $action = $this->model->updateOrCreate(
                 ['id' => $id],
                 $request->all()
             );
 
-            // Return a success response
-            return response([
-                'payload' => 'Successfully updated the '. $this->slug,
-                'status' => 200
+            // Return a success redirect response.
+            return redirect()->route($this->slug .'.show', ['id' =>$id])->with([
+                'payload' => [
+                    $this->slug => $this->model->find($id),
+                    'message' => 'Successfully updated the '. $this->slug
+                ],
+                'status' => http_response_code()
             ]);
 
         } catch (Exception $e) {
-            return response([
-                'payload' => $e->getMessage(),
-                'status' => 401
-            ]);
+            return redirect()->route($this->slug .'.edit', ['id' => $id])->with([
+                    'payload' => $this->model->find($id),
+                    'status' => http_response_code()
+                ])
+                ->withErrors($e->getMessage())
+                ->withInput();
         }
     }
 
@@ -164,14 +177,21 @@ class Controller extends BaseController
             // Delete the model object from the database.
             $this->model->destroy($id);
 
-            return response([
-                'payload' => 'Successfully deleted the '. $this->slug,
-                'status' => 200
+            return redirect()->route($this->slug .'.index', [
+                'payload' => [
+                    $this->slug => $this->model->all(),
+                    'message' => 'Successfully deleted the '. $this->slug
+                ],
+                'status' => http_response_code()
             ]);
+        
         } catch (Exception $e) {
-            return response([
-                'payload' => $e->getMessage(),
-                'status' => 401
+            return redirect()->route($this->model .'show', ['id' => $id])->with([
+                'payload' => [
+                    $this->slug => $this->model->find($id),
+                    'message' => $e->getMessage()
+                ],
+                'status' => http_response_code()
             ]);
         }
     }

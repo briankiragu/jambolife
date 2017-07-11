@@ -44,38 +44,10 @@ class User extends Authenticatable
         );
     }
 
-    public function roles()
-    {
-        $this->setPrimaryKey('user_uuid');
-        $return = $this->belongsToMany(
-            Role::class, 'role_user', 'user_uuid', 'role_id'
-        );
-        $this->setPrimaryKey('id');
-        return $return;
-    }
-
-    protected function setPrimaryKey($key)
-    {
-        $this->primaryKey = $key;
-    }
-
     public function merchant()
     {
         return $this->belongsTo(
             Merchant::class, 'merchant_uuid', 'user_uuid'
         );
-    }
-
-    public function getRoles()
-    {
-        return $this->roles->pluck('name')->toArray();
-    }
-
-    public function hasRole($role)
-    {
-        if (in_array($role, $this->roles->pluck('name')->toArray())) {
-            return true;
-        }
-        return false;
     }
 }
