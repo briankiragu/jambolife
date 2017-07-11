@@ -50,7 +50,7 @@ class Controller extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    protected function create(array $data = null)
     {
         return view($this->slug .'.create');
     }
