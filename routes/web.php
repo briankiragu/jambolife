@@ -11,16 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Navigational routes.
+Route::get('/', function () { return view('welcome'); });
+Route::get('/home', 'HomeController@index')->name('home');
+
+// Authentication routes.
+Route::group(['prefix' => 'auth'], function () {
+	Route::get('verifyemail/{token}', Auth\RegisterController::class .'@verify');
+	Auth::routes();
 });
 
-Route::post('role/{id}/permission', RoleController::class .'@addPermission')->name('role.permission.add');
-Route::put('role/{id}/permission', RoleController::class .'@editPermission')->name('role.permission.edit');
-Route::delete('role/{id}/permission', RoleController::class .'@revokePermission')->name('role.permission.revoke');
+// Role resource routes.
 Route::resource('role', RoleController::class);
+
+// Permission resource routes.
 Route::resource('permission', RoleController::class);
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

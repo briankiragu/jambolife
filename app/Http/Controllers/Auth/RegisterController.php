@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Http\Request;
+use App\Jobs\ProcessRegistration;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -71,11 +74,50 @@ class RegisterController extends Controller
             'fname' => $data['fname'],
             'lname' => $data['lname'],
             'email' => $data['email'],
-            'phone' => '254'. substr(data['phone'], -9),
+            'phone' => '254'. substr($data['phone'], -9),
             'dob' => $data['dob'],
             'identification' => $data['identification'],
             'password' => bcrypt($data['password']),
-            'api_token' => str_random(60),
+            'api_token' => base64_encode($data['email']),
         ]);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        // $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        dispatch(new ProcessRegistration($user));
+
+        return view('auth.verify');
+    }
+
+    /**
+    * Handle a registration request for the application.
+    *
+    * @param $token
+    * @return \Illuminate\Http\Response
+    */
+    public function verify($token)
+    {
+        // Check if the user exists.
+        $user = User::where('api_token', $token)->first();
+
+        // Set the user to active.
+        $user->is_active = true;
+        
+        // Login the user.
+        $this->guard()->login($user);
+
+        // Redirect the user to the home page.
+        return $this->registered($request, $user)
+                    ?: redirect($this->redirectPath());
     }
 }
