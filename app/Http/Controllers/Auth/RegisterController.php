@@ -96,6 +96,16 @@ class RegisterController extends Controller
 
         dispatch(new ProcessRegistration($user));
 
+        return redirect('auth/awaiting-verification');
+    }
+
+    /**
+     * The page displays their confirmation status.
+     *
+     * @return \Illuminate\Http\Response
+     **/
+    public function awaitingConfirmation()
+    {
         return view('auth.verify');
     }
 

@@ -17,6 +17,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Authentication routes.
 Route::group(['prefix' => 'auth'], function () {
+	Route::get('awaiting-verification', Auth\RegisterController::class .'@awaitingConfirmation');
 	Route::get('verifyemail/{token}', Auth\RegisterController::class .'@verify');
 	Auth::routes();
 });
