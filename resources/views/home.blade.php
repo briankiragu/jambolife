@@ -9,6 +9,10 @@
 
                 <div class="panel-body">
                     You are logged in!
+
+                    @if (!Auth::user()->is_active)
+                        Status is: {{ Auth::user()->is_active }}
+                    @endif
                 </div>
             </div>
         </div>

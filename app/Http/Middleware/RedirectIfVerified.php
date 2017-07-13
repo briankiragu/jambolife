@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class RedirectIfVerified
 {
@@ -15,8 +16,8 @@ class RedirectIfVerified
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::user()->is_active) {
-            $this->guard()->logout();
+        if (Auth::user()->is_active == false) {
+            Auth::logout();
             $request->session()->flush();
             $request->session()->regenerate();
             return redirect('/auth/awaiting-verification');

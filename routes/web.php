@@ -13,18 +13,22 @@
 
 // Navigational routes.
 Route::get('/', function () { return view('welcome'); });
-Route::get('/home', 'HomeController@index')->name('home');
 
 // Authentication routes.
-Route::group(['prefix' => 'auth'], function () {
+Route::prefix('auth')->group(function () {
 	Route::get('awaiting-verification', Auth\RegisterController::class .'@awaitingConfirmation');
 	Route::get('verifyemail/{token}', Auth\RegisterController::class .'@verify');
 	Auth::routes();
 });
 
-// Role resource routes.
-Route::resource('role', RoleController::class);
+// Apply authentication middleware.
+Route::middleware(['auth', 'verified'])->group(function () {
+	// Homepage.
+	Route::get('/home', 'HomeController@index')->name('home');
 
-// Permission resource routes.
-Route::resource('permission', RoleController::class);
+	// Role resource routes.
+	Route::resource('role', RoleController::class);
 
+	// Permission resource routes.
+	Route::resource('permission', RoleController::class);
+});

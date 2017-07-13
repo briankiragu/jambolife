@@ -115,14 +115,17 @@ class RegisterController extends Controller
     * @param $token
     * @return \Illuminate\Http\Response
     */
-    public function verify($token)
+    public function verify(Request $request, $token)
     {
         // Check if the user exists.
         $user = User::where('api_token', $token)->first();
 
         // Set the user to active.
         $user->is_active = true;
-        
+
+        // Save the user model.
+        $user->save();
+
         // Login the user.
         $this->guard()->login($user);
 

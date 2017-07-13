@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->integer('role_id')->default(1);
             $table->string('user_uuid', 50)->unique();
             $table->string('merchant_uuid', 50)->nullable();
-            
+
             $table->string('fname', 20);
             $table->string('lname', 20);
             $table->string('phone', 15)->unique();
@@ -28,7 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('api_token')->unique();
             $table->boolean('is_active')->default(false);
-            
+
             $table->rememberToken();
             $table->timestamps();
         });
