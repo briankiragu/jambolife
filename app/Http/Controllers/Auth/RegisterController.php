@@ -120,8 +120,9 @@ class RegisterController extends Controller
         // Check if the user exists.
         $user = User::where('api_token', $token)->first();
 
-        // Set the user to active.
+        // Set the user to active, reinstance their api token and their role to customer.
         $user->is_active = true;
+        $user->api_token = base64_encode($user->email . $user->password);
 
         // Save the user model.
         $user->save();
