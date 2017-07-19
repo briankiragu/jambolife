@@ -13,42 +13,43 @@
 
 // Navigational routes.
 Route::get('/', function () { return view('welcome'); });
+Route::get('auth/awaiting-verification', Auth\RegisterController::class .'@awaitingConfirmation');
+Route::get('auth/verifyemail/{token}', Auth\RegisterController::class .'@verify');
+Auth::routes();
 
-// Authentication routes.
-Route::prefix('auth')->group(function () {
-	Route::get('awaiting-verification', Auth\RegisterController::class .'@awaitingConfirmation');
-	Route::get('verifyemail/{token}', Auth\RegisterController::class .'@verify');
-	Auth::routes();
+// Apply verification middleware.
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/home', 'HomeController@home')->name('home');
+});
+
+// Merchant routes.
+Route::prefix('merchant')->group(function () {
+    Route::get('login', 'Merchant\Auth\LoginController@showLoginForm');
+    Route::post('login', 'Merchant\Auth\LoginController@login')->name('merchant.login');
+    Route::middleware('auth:merchant')->group(function () {
+        //
+	});
 });
 
 // All admin routes.
-Route::prefix('admin')->group(function () {
-	// Super-admin routes.
-	Route::middleware('role:super-admin')->group(function () {
-	});
+Route::prefix('admin')->namespace('Admin')->group(function () {
+    // Authentication routes.
+    Route::get('login', 'Auth\LoginController@showLoginForm');
+    Route::post('login', 'Auth\LoginController@login')->name('admin.login');
 
-	// Admin routes.
-	Route::middleware('role:admin')->group(function () {
-		// Manage all events.
-		Route::resource('events', EventController::class);
-		Route::prefix('events')->group(function () {
-			Route::resource('{event_uuid}/tickets', TicketController::class);
-			Route::resource('{event_uuid}/ticket-tiers', TicketTierController::class);
-			Route::resource('{event_uuid}/organisers', MerchantController::class);
-			Route::get('{event_uuid}/transactions', TransactionController::class .'@index');
-		});
-		// Manage the merchants (organisers) and users.
-		Route::resource('users', UserController::class, ['only' => ['index', 'show']]);
-		Route::resource('organisers', MerchantController::class);
-	});
+    Route::middleware('auth:admin')->group(function () {
+        // Dashboard.
+		Route::get('/', 'AdminDashController@dash');
 
-	// Organizer routes.
-	Route::middleware('role:organiser')->group(function () {
+        // Event manager.
+        Route::prefix('events')->group(function () {
+    		Route::resource('{event_uuid}/tickets', TicketController::class);
+    		Route::resource('{event_uuid}/ticket-tiers', TicketTierController::class);
+    		Route::resource('{event_uuid}/organisers', MerchantController::class);
+    		Route::get('{event_uuid}/transactions', TransactionController::class .'@index');
+            Route::resource('users', UserController::class, ['only' => ['index', 'show']]);
+            Route::resource('organisers', MerchantController::class);
+    	});
+        Route::resource('events', EventController::class);
 	});
-});
-	
-// Apply verification middleware.
-Route::middleware(['auth', 'verified'])->group(function () {
-	// Homepage.
-	Route::get('/home', 'HomeController@home')->name('home');
 });

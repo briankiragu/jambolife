@@ -1,32 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
 
 use Validator;
 use App\Event;
-use App\TicketTier;
+use App\Merchant;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class TicketTierController extends Controller
+class MerchantController extends Controller
 {
-	protected $ticket, $event;
-    
+	protected $event;
+
     /**
     * Default clss constructor
     */
-    public function __construct(Request $request, TicketTier $ticketTier, Event $event)
+    public function __construct(Request $request, Merchant $merchant, Event $event)
     {
         // Instantiate the ticket, ticket-tier and event.
         $this->event = $event;
-        $this->model = $ticketTier;
+        $this->model = $merchant;
 
         // Instantiate the validator.
         $this->validator = Validator::make($request->all(), [
-            // 
+            //
         ]);
 
         // Model blade slug.
-        $this->slug = 'ticket-tier';
+        $this->slug = 'merchant';
     }
 
     /**

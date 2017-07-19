@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
 
 use Validator;
 use App\Event;
 use App\Ticket;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class TicketController extends Controller
 {
 	protected $event;
-    
+
     /**
     * Default clss constructor
     */
@@ -22,7 +24,7 @@ class TicketController extends Controller
 
         // Instantiate the validator.
         $this->validator = Validator::make($request->all(), [
-        	// 
+        	//
         ]);
 
         // Model blade slug.

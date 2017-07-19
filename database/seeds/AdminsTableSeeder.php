@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class UsersTableSeeder extends Seeder
+class AdminsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        App\User::create([
+        App\Admin::create([
             'user_uuid' => str_random(10),
             'fname' => 'Brian',
             'lname' => 'Kiragu',
@@ -22,6 +22,5 @@ class UsersTableSeeder extends Seeder
             'is_active' => true,
             'api_token' => base64_encode('bkariuki@hotmail.com'),
         ]);
-        // factory(App\User::class, 50)->create();
     }
 }

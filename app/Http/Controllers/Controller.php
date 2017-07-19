@@ -184,7 +184,7 @@ class Controller extends BaseController
                 ],
                 'status' => http_response_code()
             ]);
-        
+
         } catch (Exception $e) {
             return redirect()->route($this->model .'show', ['id' => $id])->with([
                 'payload' => [

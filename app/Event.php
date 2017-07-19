@@ -8,7 +8,7 @@ class Event extends Model
 {
     protected $fillable = [
     	'event_uuid', 'merchant_uuid', 'name', 'type_id', 'city',
-    	'street', 'building', 'coordinates', 'big_image', 'small_image', 
+    	'street', 'building', 'coordinates', 'big_image', 'small_image',
     	'description', 'video', 'sales_close', 'event_start', 'event_end'
 	];
 
