@@ -6,7 +6,6 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "almasaeed2010/adminlte": "^2.3",
         "barryvdh/laravel-debugbar": "^2.4",
         "barryvdh/laravel-snappy": "^0.3.3",
         "guzzlehttp/guzzle": "^6.3",
@@ -17,8 +16,7 @@
         "league/fractal": "^0.16.0",
         "roumen/sitemap": "^2.6",
         "spatie/laravel-permission": "^2.2",
-        "yajra/laravel-datatables-oracle": "^7.9",
-        "yajra/laravel-oci8": "^5.4"
+        "yajra/laravel-datatables-oracle": "^7.9"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

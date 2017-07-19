@@ -12,6 +12,20 @@ class Event extends Model
     	'description', 'video', 'sales_close', 'event_start', 'event_end'
 	];
 
+    public function tickets()
+    {
+        return $this->hasMany(
+            App\Ticket::class, 'event_uuid', 'event_uuid'
+        );
+    }
+
+    public function ticketTiers()
+    {
+        return $this->hasMany(
+            App\TicketTier::class, 'event_uuid', 'event_uuid'
+        );
+    }
+
     public function merchant()
     {
         return $this->belongsTo(

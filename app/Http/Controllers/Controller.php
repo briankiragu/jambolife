@@ -34,11 +34,11 @@ class Controller extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($uuid = null)
     {
         return view($this->slug .'.index', [
             'payload' => [
-                $this->slug => $this->model->all(),
+                $this->slug .'s' => $this->model->paginate(15),
                 'message' => ''
             ],
             'status' => http_response_code()
@@ -61,7 +61,7 @@ class Controller extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $uuid = null)
     {
         try {
             // Validate the user input
@@ -80,7 +80,7 @@ class Controller extends BaseController
                     $this->slug => $resource,
                     'message' => 'Successfully created the '. $this->slug
                 ],
-                'status' => http_response_code()
+                'status' => http_response_code(201)
             ]);
 
         } catch (Exception $e) {
@@ -96,7 +96,7 @@ class Controller extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($uuid = null, $id)
     {
         return view($this->slug .'.show', [
             'payload' => [
@@ -113,7 +113,7 @@ class Controller extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($uuid = null, $id)
     {
         return view($this->slug .'.edit', [
             'payload' => $this->model->find($id),
@@ -128,13 +128,13 @@ class Controller extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid = null, $id)
     {
         try {
             if ($this->validator->fails()) {
                 return redirect()->route($this->slug .'.edit', ['id' => $id])->with([
                     'payload' => $this->model->find($id),
-                    'status' => http_response_code()
+                    'status' => http_response_code(422)
                 ])
                 ->withErrors($this->validator)
                 ->withInput();
@@ -158,7 +158,7 @@ class Controller extends BaseController
         } catch (Exception $e) {
             return redirect()->route($this->slug .'.edit', ['id' => $id])->with([
                     'payload' => $this->model->find($id),
-                    'status' => http_response_code()
+                    'status' => http_response_code(500)
                 ])
                 ->withErrors($e->getMessage())
                 ->withInput();
@@ -171,7 +171,7 @@ class Controller extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($uuid = null, $id)
     {
         try {
             // Delete the model object from the database.
@@ -179,7 +179,7 @@ class Controller extends BaseController
 
             return redirect()->route($this->slug .'.index', [
                 'payload' => [
-                    $this->slug => $this->model->all(),
+                    $this->slug .'s' => $this->model->all(),
                     'message' => 'Successfully deleted the '. $this->slug
                 ],
                 'status' => http_response_code()
@@ -191,7 +191,7 @@ class Controller extends BaseController
                     $this->slug => $this->model->find($id),
                     'message' => $e->getMessage()
                 ],
-                'status' => http_response_code()
+                'status' => http_response_code(500)
             ]);
         }
     }

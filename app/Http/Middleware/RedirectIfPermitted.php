@@ -2,10 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
 use Closure;
 
-class RoleMiddleware
+class RedirectIfPermitted
 {
     /**
      * Handle an incoming request.
@@ -14,20 +13,11 @@ class RoleMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role, $permission)
+    public function handle($request, Closure $next, $role)
     {
-        if (Auth::guest()) {
-            return redirect('/');
-        }
-
         if (! $request->user()->hasRole($role)) {
-           abort(403);
+            return redirect('/home');
         }
-        
-        if (! $request->user()->can($permission)) {
-           abort(403);
-        }
-
         return $next($request);
     }
 }

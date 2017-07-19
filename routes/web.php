@@ -21,14 +21,34 @@ Route::prefix('auth')->group(function () {
 	Auth::routes();
 });
 
-// Apply authentication middleware.
+// All admin routes.
+Route::prefix('admin')->group(function () {
+	// Super-admin routes.
+	Route::middleware('role:super-admin')->group(function () {
+	});
+
+	// Admin routes.
+	Route::middleware('role:admin')->group(function () {
+		// Manage all events.
+		Route::resource('events', EventController::class);
+		Route::prefix('events')->group(function () {
+			Route::resource('{event_uuid}/tickets', TicketController::class);
+			Route::resource('{event_uuid}/ticket-tiers', TicketTierController::class);
+			Route::resource('{event_uuid}/organisers', MerchantController::class);
+			Route::get('{event_uuid}/transactions', TransactionController::class .'@index');
+		});
+		// Manage the merchants (organisers) and users.
+		Route::resource('users', UserController::class, ['only' => ['index', 'show']]);
+		Route::resource('organisers', MerchantController::class);
+	});
+
+	// Organizer routes.
+	Route::middleware('role:organiser')->group(function () {
+	});
+});
+	
+// Apply verification middleware.
 Route::middleware(['auth', 'verified'])->group(function () {
 	// Homepage.
-	Route::get('/home', 'HomeController@index')->name('home');
-
-	// Role resource routes.
-	Route::resource('role', RoleController::class);
-
-	// Permission resource routes.
-	Route::resource('permission', RoleController::class);
+	Route::get('/home', 'HomeController@home')->name('home');
 });
