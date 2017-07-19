@@ -2,14 +2,23 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Merchant extends Model
+class Merchant extends Authenticable
 {
+    use Notifiable, HasRoles;
+
+    /**
+     * The attribures that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
-    	'merchant_uuid','name','description',
-    	'telephone','facebook','twitter',
-    	'website','email','is_active'
+    	'merchant_uuid', 'name', 'description',
+    	'telephone', 'facebook', 'twitter',
+    	'website', 'email', 'is_active'
 	];
 
     public function events()

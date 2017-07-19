@@ -25,7 +25,7 @@ class CreateMerchantsTable extends Migration
             $table->string('twitter');
             $table->string('website');
             $table->boolean('is_active')->default(false);
-           
+
             $table->timestamps();
         });
     }
