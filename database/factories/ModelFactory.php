@@ -26,3 +26,27 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+// Event Type factory.
+$factory->define(App\EventType::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->sentence($nbWords = 3, $variableNbWords = true),
+    ];
+});
+
+// Event factory.
+$factory->define(App\Event::class, function (Faker\Generator $faker) {
+    return [
+        'event_uuid' => str_random(20),
+        'merchant_uuid' => 1,
+        'event_type_id' => $faker->numberBetween($min = 1, $max = 5),
+        'name' => $faker->sentence($nbWords = 3, $variableNbWords = true),
+        'description' => $faker->text,
+        'city' => $faker->city,
+        'street' => $faker->streetAddress,
+        'building' => $faker->buildingNumber,
+        'sales_close' => $faker->date($format = 'Y-m-d', $max = 'now'),
+        'event_start' => $faker->date($format = 'Y-m-d', $max = 'now'),
+        'event_end' => $faker->date($format = 'Y-m-d', $max = 'now'),
+    ];
+});

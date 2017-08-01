@@ -37,10 +37,9 @@
                 <thead>
                   <tr>
                     <th>Event Name</th>
-                    <th>Event Type</th>
                     <th>City</th>
-                    <th>Street</th>
-                    <th>Building</th>
+                    <th>Description</th>
+                    <th>Sales Close</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Organiser</th>
@@ -48,38 +47,25 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="gradeX">
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Win 95+</td>
-                    <td class="center">4</td>
-                    <td class="center">X</td>
-                    <td class="center">X</td>
-                    <td class="center">X</td>
-                    <td class="center">X</td>
-                    <td class="center">X</td>
-                  </tr>
                   @foreach ($payload['events'] as $event)
                     <tr class="gradeX">
                       <td>{{ $event->name }}</td>
-                      <td>{{ $event->type }}</td>
                       <td>{{ $event->city }}</td>
-                      <td class="center">{{ $event->street }}</td>
-                      <td class="center">{{ $event->building }}</td>
                       <td class="center">{{ $event->description }}</td>
-                      <td class="center">{{ $event->sales_close }}</td>
-                      <td class="center">{{ $event->event_start }}</td>
-                      <td class="center">{{ $event->event_end }}</td>
+                      <td class="center">{{ \Carbon\Carbon::parse($event->sales_close)->toFormattedDateString() }}</td>
+                      <td class="center">{{ \Carbon\Carbon::parse($event->event_start)->toFormattedDateString() }}</td>
+                      <td class="center">{{ \Carbon\Carbon::parse($event->event_end)->toFormattedDateString() }}</td>
+                      <td class="center">JamboLife</td>
+                      <td class="center">Edit</td>
                     </tr>
                   @endforeach
                 </tbody>
                 <tfoot>
                   <tr>
                     <th>Event Name</th>
-                    <th>Event Type</th>
                     <th>City</th>
-                    <th>Street</th>
-                    <th>Building</th>
+                    <th>Description</th>
+                    <th>Sales Close</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Organiser</th>
@@ -109,7 +95,6 @@
                   { extend: 'csv' },
                   { extend: 'excel', title: 'ExampleFile' },
                   { extend: 'pdf', title: 'ExampleFile' },
-
                   { extend: 'print', customize: function (win) {
                       $(win.document.body).addClass('white-bg');
                       $(win.document.body).css('font-size', '10px');
