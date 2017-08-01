@@ -26,6 +26,9 @@
           <div class="ibox-title">
             <h5>Registered events</h5>
             <div class="ibox-tools">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="{{ route('events.create') }}">
+                  <button type="button" class="btn btn-outline btn-primary">Create an event</button>
+              </a>
               <a class="collapse-link">
                 <i class="fa fa-chevron-up"></i>
               </a>
@@ -56,7 +59,10 @@
                       <td class="center">{{ \Carbon\Carbon::parse($event->event_start)->toFormattedDateString() }}</td>
                       <td class="center">{{ \Carbon\Carbon::parse($event->event_end)->toFormattedDateString() }}</td>
                       <td class="center">JamboLife</td>
-                      <td class="center">Edit</td>
+                      <td class="center">
+                        <a href="{{ route('events.edit', ['id' => $event->id]) }}"></a>
+                        <button type="button" class="btn btn-outline btn-primary">Edit</button>
+                      </td>
                     </tr>
                   @endforeach
                 </tbody>
