@@ -18,4 +18,12 @@ class Admin extends Authenticable
         'dob', 'identification', 'password', 'is_active',
         'api_token', 'role_id', 'remember_token', 'merchant_uuid'
     ];
+
+    /**
+     * Return the fullname of the user.
+     */
+    public function fullname()
+    {
+        return $this->fname .' '. $this->lname;
+    }
 }

@@ -16,7 +16,7 @@ class AdminsTableSeeder extends Seeder
             'fname' => 'Brian',
             'lname' => 'Kiragu',
             'phone' => '254715236020',
-            'email' => 'bkariuki@hotmail.com',
+            'email' => 'dev@deveint.com',
             'identification' => '32391080',
             'password' => bcrypt('secret'),
             'is_active' => true,

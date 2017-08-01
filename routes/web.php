@@ -39,8 +39,7 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
 
     Route::middleware('auth:admin')->group(function () {
         // Dashboard.
-		Route::get('/', 'AdminDashController@dash');
-
+		Route::get('/', 'AdminDashController@dash')->name('admin.dash');
         // Event manager.
         Route::prefix('events')->group(function () {
     		Route::resource('{event_uuid}/tickets', TicketController::class);
