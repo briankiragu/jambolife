@@ -37,8 +37,8 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
     Route::get('login', 'Auth\LoginController@showLoginForm');
     Route::post('login', 'Auth\LoginController@login')->name('admin.login');
 
+    // Admin dashboard.
     Route::middleware('auth:admin')->group(function () {
-        // Dashboard.
 		Route::get('/', 'AdminDashController@dash')->name('admin.dash');
         // Event manager.
         Route::prefix('events')->group(function () {

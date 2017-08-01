@@ -2,9 +2,20 @@
 
 @section('content')
   <div class="row">
-
     {{-- Total Income --}}
-    <div class="col-lg-3">
+    <div class="col-lg-6">
+      <div class="widget navy-bg no-padding">
+        <div class="p-m">
+          <h1 class="m-xs">$ 1,540</h1>
+          <h3 class="font-bold no-margins">Annual income</h3>
+          <small>Income form tickets sales.</small>
+        </div>
+        <div class="flot-chart">
+          <div class="flot-chart-content" id="flot-chart1"></div>
+        </div>
+      </div>
+    </div>
+    {{-- <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
           <h5>Income</h5>
@@ -15,10 +26,24 @@
           <small>Total income</small>
         </div>
       </div>
-    </div>
+    </div> --}}
 
-    {{-- Income --}}
+    {{-- Total Events --}}
     <div class="col-lg-3">
+      <a href="{{ route('events.index') }}">
+        <div class="widget lazur-bg no-padding">
+          <div class="p-m">
+            <h1 class="m-xs">210</h1>
+            <h3 class="font-bold no-margins">Total Events</h3>
+            <small>Total registered events.</small>
+          </div>
+          <div class="flot-chart">
+            <div class="flot-chart-content" id="flot-chart2"></div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {{-- <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
           <h5>Events</h5>
@@ -29,10 +54,22 @@
           <small>Total registered events</small>
         </div>
       </div>
-    </div>
+    </div> --}}
 
     {{-- Tickets sold --}}
     <div class="col-lg-3">
+      <div class="widget lazur-bg no-padding">
+        <div class="p-m">
+          <h1 class="m-xs">10,452</h1>
+          <h3 class="font-bold no-margins">Ticket sold</h3>
+          <small>Total number of tickets sold.</small>
+        </div>
+        <div class="flot-chart">
+          <div class="flot-chart-content" id="flot-chart3"></div>
+        </div>
+      </div>
+    </div>
+    {{-- <div class="col-lg-3">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
           <h5>Tickets Sold</h5>
@@ -43,7 +80,7 @@
           <small>Total tickets sold</small>
         </div>
       </div>
-    </div>
+    </div> --}}
   </div>
 
   {{-- Orders chart --}}
@@ -185,7 +222,6 @@
               [gd(2012, 1, 25), 7], [gd(2012, 1, 26), 9], [gd(2012, 1, 27), 9], [gd(2012, 1, 28), 8],
               [gd(2012, 1, 29), 5], [gd(2012, 1, 30), 8], [gd(2012, 1, 31), 25]
           ];
-
           var data3 = [
               [gd(2012, 1, 1), 800], [gd(2012, 1, 2), 500], [gd(2012, 1, 3), 600], [gd(2012, 1, 4), 700],
               [gd(2012, 1, 5), 500], [gd(2012, 1, 6), 456], [gd(2012, 1, 7), 800], [gd(2012, 1, 8), 589],
@@ -196,7 +232,6 @@
               [gd(2012, 1, 25), 786], [gd(2012, 1, 26), 666], [gd(2012, 1, 27), 888], [gd(2012, 1, 28), 900],
               [gd(2012, 1, 29), 178], [gd(2012, 1, 30), 555], [gd(2012, 1, 31), 993]
           ];
-
 
           var dataset = [
               {
@@ -276,6 +311,109 @@
                   borderWidth: 0
               }
           };
+
+          var d1 = [[1262304000000, 6], [1264982400000, 3057], [1267401600000, 20434], [1270080000000, 31982], [1272672000000, 26602], [1275350400000, 27826], [1277942400000, 24302], [1280620800000, 24237], [1283299200000, 21004], [1285891200000, 12144], [1288569600000, 10577], [1291161600000, 10295]];
+          var d2 = [[1262304000000, 5], [1264982400000, 200], [1267401600000, 1605], [1270080000000, 6129], [1272672000000, 11643], [1275350400000, 19055], [1277942400000, 30062], [1280620800000, 39197], [1283299200000, 37000], [1285891200000, 27000], [1288569600000, 21000], [1291161600000, 17000]];
+
+          var data1 = [
+              { label: "Data 1", data: d1, color: '#17a084'},
+              { label: "Data 2", data: d2, color: '#127e68' }
+          ];
+          $.plot($("#flot-chart1"), data1, {
+              xaxis: {
+                  tickDecimals: 0
+              },
+              series: {
+                  lines: {
+                      show: true,
+                      fill: true,
+                      fillColor: {
+                          colors: [{
+                              opacity: 1
+                          }, {
+                              opacity: 1
+                          }]
+                      }
+                  },
+                  points: {
+                      width: 0.1,
+                      show: false
+                  }
+              },
+              grid: {
+                  show: false,
+                  borderWidth: 0
+              },
+              legend: {
+                  show: false
+              }
+          });
+
+          var data2 = [
+              { label: "Data 1", data: d1, color: '#19a0a1'}
+          ];
+          $.plot($("#flot-chart2"), data2, {
+              xaxis: {
+                  tickDecimals: 0
+              },
+              series: {
+                  lines: {
+                      show: true,
+                      fill: true,
+                      fillColor: {
+                          colors: [{
+                              opacity: 1
+                          }, {
+                              opacity: 1
+                          }]
+                      }
+                  },
+                  points: {
+                      width: 0.1,
+                      show: false
+                  }
+              },
+              grid: {
+                  show: false,
+                  borderWidth: 0
+              },
+              legend: {
+                  show: false
+              }
+          });
+
+          var data3 = [
+              { label: "Data 1", data: d2, color: '#19a0a1'}
+          ];
+          $.plot($("#flot-chart3"), data2, {
+              xaxis: {
+                  tickDecimals: 0
+              },
+              series: {
+                  lines: {
+                      show: true,
+                      fill: true,
+                      fillColor: {
+                          colors: [{
+                              opacity: 1
+                          }, {
+                              opacity: 1
+                          }]
+                      }
+                  },
+                  points: {
+                      width: 0.1,
+                      show: false
+                  }
+              },
+              grid: {
+                  show: false,
+                  borderWidth: 0
+              },
+              legend: {
+                  show: false
+              }
+          });
 
           function gd(year, month, day) {
               return new Date(year, month - 1, day).getTime();

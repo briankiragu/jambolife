@@ -38,7 +38,7 @@ class Controller extends BaseController
     {
         return view($this->slug .'.index', [
             'payload' => [
-                $this->slug .'s' => $this->model->paginate(15),
+                $this->slug .'s' => $this->model->all(),
                 'message' => ''
             ],
             'status' => http_response_code()
