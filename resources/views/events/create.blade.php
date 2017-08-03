@@ -18,6 +18,10 @@
   <link href="{{ asset('css/plugins/select2/select2.min.css')}}" rel="stylesheet">
   <link href="{{ asset('css/plugins/touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet">
   <link href="{{ asset('css/plugins/dualListbox/bootstrap-duallistbox.min.css')}}" rel="stylesheet">
+  <link href="{{ asset('css/plugins/dropzone/basic.css')}}" rel="stylesheet">
+  <link href="{{ asset('css/plugins/dropzone/dropzone.css')}}" rel="stylesheet">
+  <link href="{{ asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+  <link href="{{ asset('css/style.css')}}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -33,49 +37,206 @@
           </div>
         </div>
         <div class="ibox-content">
-          <form method="get" class="form-horizontal" action="{{ route('events.store') }}">
+          <form method="post" class="form-horizontal" action="{{ route('events.store') }}">
             {{ csrf_field() }}
-            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}"><label class="col-sm-2 control-label">Name</label>
-              <div class="col-sm-10"><input type="text" name="name" class="form-control"></div>
-            </div>
-            <div class="form-group{{ $errors->has('event_type_id') ? ' has-error' : '' }}"><label class="col-sm-2 control-label">Type</label>
-              <div class="col-sm-10">
-                <select class="form-control m-b" name="event_type_id">
-                  <option>Option 1</option>
-                  <option>Option 2</option>
-                  <option>Option 3</option>
-                  <option>Option 4</option>
-                </select>
+
+            {{-- Name --}}
+            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+              <div class="col-md-6">
+                <label class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                  <input type="text" name="name" class="form-control" placeholder="Enter the event name" value="{{ old('name') }}">
+                  @if ($errors->has('name'))
+                    <span class="help-block">
+                      <strong>{{ $errors->first('name') }}</strong>
+                    </span>
+                  @endif
+                </div>
+              </div>
+
+              {{-- Event Type ID --}}
+              <div class="col-md-6">
+                <label class="col-sm-2 control-label">Type</label>
+                <div class="col-sm-10">
+                  <select class="form-control m-b" name="event_type_id">
+                    @foreach ($event_types as $event_type)
+                      <option value="{{ $event_type->id }}" {{ old('event_type_id') == ($event_type->id) ? 'selected' : '' }}>
+                        {{ $event_type->name }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @if ($errors->has('event_type_id'))
+                    <span class="help-block">
+                      <strong>{{ $errors->first('event_type_id') }}</strong>
+                    </span>
+                  @endif
+                </div>
               </div>
             </div>
-            <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}"><label class="col-sm-2 control-label">City</label>
-              <div class="col-sm-10"><input type="text" name="city" class="form-control"></div>
+            <div class="hr-line-dashed"></div>
+
+            {{-- Event start date --}}
+            {{-- <div class="form-group{{ $errors->has('event_start') ? ' has-error' : '' }}" id="data_2">
+              <label class="col-sm-2 control-label font-normal">Event Start</label>
+              <div class="col-sm-10 input-group date">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input type="text" name="event_start" class="form-control" placeholder="Enter the event start date" value="{{ old('event_start') }}">
+                @if ($errors->has('event_start'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('event_start') }}</strong>
+                  </span>
+                @endif
+              </div>
             </div>
-            <div class="form-group{{ $errors->has('street') ? ' has-error' : '' }}"><label class="col-sm-2 control-label">Street</label>
-              <div class="col-sm-10"><input type="text" name="street" class="form-control"></div>
+
+            <div class="form-group{{ $errors->has('event_end') ? ' has-error' : '' }}" id="data_3">
+              <label class="col-sm-2 control-label font-normal">Event End</label>
+              <div class="col-sm-10 input-group date">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input type="text" name="event_end" class="form-control" placeholder="Enter the event end date" value="{{ old('event_end') }}">
+                @if ($errors->has('event_end'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('event_end') }}</strong>
+                  </span>
+                @endif
+              </div>
+            </div> --}}
+            <div class="form-group{{ $errors->has('event_end') ? ' has-error' : '' }}{{ $errors->has('event_start') ? ' has-error' : '' }}" id="data_5">
+              <div class="col-sm-12">
+                <label class="col-sm-1 control-label font-normal">Event Dates</label>
+                <div class="col-sm-11 input-daterange input-group" id="datepicker">
+                  <input type="text" class="input-sm form-control" name="event_start" value="{{ old('event_start') }}"/>
+                  <span class="input-group-addon">to</span>
+                  <input type="text" class="input-sm form-control" name="event_end" value="{{ old('event_end') }}" />
+                </div>
+                <div class="col-sm-10 col-sm-offset-2">
+                  @if ($errors->has('event_start') && $errors->has('event_end'))
+                    <span class="help-block">
+                      <strong>{{ $errors->first('event_start') }}</strong>
+                      <strong>{{ $errors->first('event_end') }}</strong>
+                    </span>
+                  @endif
+                </div>
+              </div>
             </div>
-            <div class="form-group{{ $errors->has('building') ? ' has-error' : '' }}"><label class="col-sm-2 control-label">Building</label>
-              <div class="col-sm-10"><input type="text" name="building" class="form-control"></div>
+            <div class="hr-line-dashed"></div>
+
+            {{-- City --}}
+            <div class="form-group">
+              <div class="col-md-4{{ $errors->has('name') ? ' has-error' : '' }}">
+                <label class="col-sm-3 control-label">City</label>
+                <div class="col-sm-9">
+                  <input type="text" name="city" class="form-control" placeholder="Enter the event city" value="{{ old('city') }}">
+                  @if ($errors->has('city'))
+                    <span class="help-block">
+                      <strong>{{ $errors->first('city') }}</strong>
+                    </span>
+                  @endif
+                </div>
+              </div>
+
+              {{-- Street --}}
+              <div class="col-md-4{{ $errors->has('street') ? ' has-error' : '' }}">
+                <label class="col-sm-3 control-label">Street</label>
+                <div class="col-sm-9">
+                  <input type="text" name="street" class="form-control" placeholder="Enter the event street" value="{{ old('street') }}">
+                  @if ($errors->has('street'))
+                    <span class="help-block">
+                      <strong>{{ $errors->first('street') }}</strong>
+                    </span>
+                  @endif
+                </div>
+              </div>
+
+              {{-- Building --}}
+              <div class="col-md-4{{ $errors->has('building') ? ' has-error' : '' }}">
+                <label class="col-sm-3 control-label">Building</label>
+                <div class="col-sm-9">
+                  <input type="text" name="building" class="form-control" placeholder="Enter the event building" value="{{ old('building') }}">
+                  @if ($errors->has('building'))
+                    <span class="help-block">
+                      <strong>{{ $errors->first('building') }}</strong>
+                    </span>
+                  @endif
+                </div>
+              </div>
             </div>
-            <div class="form-group{{ $errors->has('building') ? ' has-error' : '' }}"><label class="col-sm-2 control-label">Description</label>
-              <div class="col-sm-10"><textarea name="description" class="form-control" rows="3"></textarea></div>
+            <div class="hr-line-dashed"></div>
+
+            {{-- Description --}}
+            <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+              <label class="col-sm-1 control-label">Description</label>
+              <div class="col-sm-11">
+                <textarea name="description" class="form-control" rows="3" placeholder="Enter the event description">{{ old('name') }}</textarea>
+                @if ($errors->has('description'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('description') }}</strong>
+                  </span>
+                @endif
+              </div>
             </div>
+            <div class="hr-line-dashed"></div>
+
             <div class="form-group{{ $errors->has('sales_close') ? ' has-error' : '' }}" id="data_1">
-              <label class="col-sm-2 control-label font-noraml">Sales Close</label>
-              <div class="col-sm-10 input-group date">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="sales_close" class="form-control" value="03/04/2014">
+              <div class="col-sm-12">
+                <label class="col-sm-1 control-label font-normal">Sales Close</label>
+                <div class="col-sm-11 input-group date">
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  <input type="text" name="sales_close" class="form-control" placeholder="Enter the close of sales date" value="{{ old('sales_close') }}">
+                </div>
+                @if ($errors->has('sales_close'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('sales_close') }}</strong>
+                  </span>
+                @endif
               </div>
             </div>
-            <div class="form-group{{ $errors->has('event_start') ? ' has-error' : '' }}" id="data_1">
-              <label class="col-sm-2 control-label font-noraml">Event Start</label>
-              <div class="col-sm-10 input-group date">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="event_start" class="form-control" value="03/04/2014">
+            <div class="hr-line-dashed"></div>
+
+            {{-- 230 x 230 image. --}}
+            <div class="form-group">
+              <div class="col-md-6{{ $errors->has('small_image') ? ' has-error' : '' }}">
+                <label class="col-sm-2 control-label">Small Image</label>
+                <div class="col-sm-10">
+                  <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput">
+                      <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                    <span class="fileinput-filename"></span>
+                    </div>
+                    <span class="input-group-addon btn btn-default btn-file">
+                      <span class="fileinput-new">Select file</span>
+                      <span class="fileinput-exists">Change</span>
+                      <input type="file" name="small_image"/>
+                    </span>
+                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                  </div>
+                </div>
+              </div>
+
+              {{-- 700 x 400 --}}
+              <div class="col-md-6{{ $errors->has('big_image') ? ' has-error' : '' }}">
+                <label class="col-sm-2 control-label">Large Image</label>
+                <div class="col-sm-10">
+                  <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput">
+                      <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                    <span class="fileinput-filename"></span>
+                    </div>
+                    <span class="input-group-addon btn btn-default btn-file">
+                      <span class="fileinput-new">Select file</span>
+                      <span class="fileinput-exists">Change</span>
+                      <input type="file" name="big_image"/>
+                    </span>
+                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="form-group{{ $errors->has('event_end') ? ' has-error' : '' }}" id="data_1">
-              <label class="col-sm-2 control-label font-noraml">Event End</label>
-              <div class="col-sm-10 input-group date">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="event_end" class="form-control" value="03/04/2014">
+            <div class="hr-line-dashed"></div>
+
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-primary " type="submit"><i class="fa fa-check"></i>&nbsp;Submit</button>
               </div>
             </div>
           </form>
@@ -122,8 +283,38 @@
 <script src="{{ asset('js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js')}}"></script>
 <!-- Dual Listbox -->
 <script src="{{ asset('js/plugins/dualListbox/jquery.bootstrap-duallistbox.js')}}"></script>
+<!-- Custom and plugin javascript -->
+<script src="{{ asset('js/inspinia.js')}}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js')}}"></script>
+<!-- Jasny -->
+<script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
+<!-- DROPZONE -->
+<script src="{{ asset('js/plugins/dropzone/dropzone.js')}}"></script>
+<!-- CodeMirror -->
+<script src="{{ asset('js/plugins/codemirror/codemirror.js')}}"></script>
+<script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js')}}"></script>
 <script>
+    Dropzone.options.dropzoneForm = {
+        paramName: "file", // The name that will be used to transfer the file
+        maxFilesize: 2, // MB
+        dictDefaultMessage: "<strong>Drop files here or click to upload. </strong></br> (This is just a demo dropzone. Selected files are not actually uploaded.)"
+    };
+
     $(document).ready(function(){
+        var editor_one = CodeMirror.fromTextArea(document.getElementById("code1"), {
+            lineNumbers: true,
+            matchBrackets: true
+        });
+
+        var editor_two = CodeMirror.fromTextArea(document.getElementById("code2"), {
+            lineNumbers: true,
+            matchBrackets: true
+        });
+
+        var editor_two = CodeMirror.fromTextArea(document.getElementById("code3"), {
+            lineNumbers: true,
+            matchBrackets: true
+        });
 
         $('.tagsinput').tagsinput({
             tagClass: 'label label-primary'

@@ -33,14 +33,14 @@
         </ul>
       </li>
       <li> {{-- Organisers --}}
-        <a href="#"><i class="fa fa-calendar" aria-hidden="true"></i> <span class="nav-label">Organisers</span><span class="label label-warning pull-right">16/24</span></a>
+        <a href="#"><i class="fa fa-terminal" aria-hidden="true"></i> <span class="nav-label">Organisers</span><span class="label label-warning pull-right">16/24</span></a>
         <ul class="nav nav-second-level collapse">
           <li><a href="{{ route('organisers.index') }}">View Organiser</a></li>
           <li><a href="{{ route('organisers.create') }}">Add Organiser</a></li>
         </ul>
       </li>
       <li> {{-- Sponsors --}}
-        <a href="#"><i class="fa fa-calendar" aria-hidden="true"></i> <span class="nav-label">Sponsors</span><span class="label label-warning pull-right">16/24</span></a>
+        <a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i> <span class="nav-label">Sponsors</span><span class="label label-warning pull-right">16/24</span></a>
         <ul class="nav nav-second-level collapse">
           <li><a href="#">View Sponsors</a></li>
           <li><a href="#">Add Sponsors</a></li>

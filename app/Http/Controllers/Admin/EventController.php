@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Validator;
 use App\Event;
+use App\EventType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -19,6 +20,7 @@ class EventController extends Controller
 
         // Instantiate the validator.
         $this->validator = Validator::make($request->all(), [
+            'event_type_id' => 'required',
             'name' => 'required|string|max:255',
             'city' => 'required|string|min:5|max:255',
             'street' => 'required|string|min:5|max:255',
@@ -29,6 +31,18 @@ class EventController extends Controller
         ]);
 
         // Model blade slug.
-        $this->slug = 'event';
+        $this->slug = 'events';
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    protected function create(array $data = null)
+    {
+        return view($this->slug .'.create', [
+            'event_types' => EventType::all()
+        ]);
     }
 }

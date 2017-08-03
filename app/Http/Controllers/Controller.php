@@ -38,7 +38,7 @@ class Controller extends BaseController
     {
         return view($this->slug .'.index', [
             'payload' => [
-                $this->slug .'s' => $this->model->all(),
+                $this->slug => $this->model->all(),
                 'message' => ''
             ],
             'status' => http_response_code()
@@ -179,7 +179,7 @@ class Controller extends BaseController
 
             return redirect()->route($this->slug .'.index', [
                 'payload' => [
-                    $this->slug .'s' => $this->model->all(),
+                    $this->slug => $this->model->all(),
                     'message' => 'Successfully deleted the '. $this->slug
                 ],
                 'status' => http_response_code()
